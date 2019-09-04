@@ -1,0 +1,6 @@
+development:
+  dialect: postgres
+  datasource: user=bookstore_user dbname=bookstore_db sslmode=disable
+  table: migrations
+  dir: migrations/
+  

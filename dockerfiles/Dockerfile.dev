@@ -1,0 +1,16 @@
+FROM golang:1.12-alpine AS build-env
+RUN apk add --update --no-cache ca-certificates git
+RUN apk add --update bash && rm -rf /var/cache/apk/*
+RUN apk add bash ca-certificates gcc g++ libc-dev
+RUN mkdir /bookstore
+WORKDIR /bookstore
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /go/bin/bookstore
+
+FROM alpine:3.9
+RUN apk add --update bash && rm -rf /var/cache/apk/*
+COPY --from=build-env /go/bin/bookstore /go/bin/bookstore
+ENTRYPOINT ["/go/bin/bookstore"]

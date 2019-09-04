@@ -1,0 +1,39 @@
+version: '3.1'
+
+services:
+
+  bookstore_db_dev:
+    container_name: bookstore_db_dev
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/Dockerfile.db-dev
+    restart: always
+    env_file:
+      - config/env_files/database1_dev_env
+    volumes:
+      - boosktore_db_dev_volume:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - bookstore_network_dev
+
+  bookstore_api_dev:
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/Dockerfile.dev
+    restart: always
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - bookstore_db_dev
+    networks:
+      - bookstore_network_dev
+
+networks:
+  bookstore_network_dev:
+    driver: bridge
+
+volumes:
+  bookstore_db_dev_volume:

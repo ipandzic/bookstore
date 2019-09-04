@@ -1,0 +1,3 @@
+POSTGRES_USER=bookstore_user
+POSTGRES_DB=bookstore_db
+POSTGRES_PASSWORD=bookstore_pass
